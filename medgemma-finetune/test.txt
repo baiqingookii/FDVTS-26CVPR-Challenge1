@@ -1,0 +1,19 @@
+transformer编码块验证
+CUDA_VISIBLE_DEVICES=0 nohup python /remote-home/share/25-jianfabai/medgemma-finetune/evaluate_transformer_block_and_flatten/infer_transformer_block_bestthr.py --use_cls_token --assume_uint8_0_255 --mmap > /remote-home/share/25-jianfabai/medgemma-finetune/log/transformer_block_log/test_eval/covid1b-3d_ori-and-1b_dataset_cls_lr5e-5_scale0.7-1-checkpoint-27.log 2>&1&
+flatten验证
+CUDA_VISIBLE_DEVICES=1 nohup python /remote-home/share/25-jianfabai/medgemma-finetune/evaluate_transformer_block_and_flatten/infer_flatten_block_bestthr.py --assume_uint8_0_255 --mmap > /remote-home/share/25-jianfabai/medgemma-finetune/log/flatten_classifier_log/test_eval/iccv-3d_ori-and-1b_dataset_mean_scale0.7-1-lr5e-6.log 2>&1&
+transformer+解冻后两层验证
+CUDA_VISIBLE_DEVICES=1 nohup python /remote-home/share/25-jianfabai/medgemma-finetune/evaluate_transformer_block_and_flatten/infer_transformer_block_2vision_bestthr.py --assume_uint8_0_255 --mmap > /remote-home/share/25-jianfabai/medgemma-finetune/log/transformer_block_log/2vision_test_eval/iccv-3d_ori-and-1b_dataset_scale0.7-1-lr1e-6.log 2>&1&
+lora验证
+CUDA_VISIBLE_DEVICES=5 nohup python /remote-home/share/25-jianfabai/medgemma-finetune/evaluate_transformer_block_and_flatten/infer_medgemma_lora_bestthr.py --assume_uint8_0_255 --mmap > /remote-home/share/25-jianfabai/medgemma-finetune/log/lora_log/test/iccv/covid1b.log 2>&1&
+
+transformer和medsiglip结果分析代码在/remote-home/share/25-jianfabai/medgemma-finetune/predict_result/somework/analysis_diff_com.py
+
+medsiglip分析代码：
+chmod +x /remote-home/share/25-jianfabai/medgemma-finetune/run_medsiglip_test_serial.sh
+nohup /remote-home/share/25-jianfabai/medgemma-finetune/run_medsiglip_test_serial.sh > /remote-home/share/25-jianfabai/medgemma-finetune/log/predict_log/iccv/run_medsiglip_test_serial_launcher.log 2>&1 &
+
+
+统计结果时先/remote-home/share/25-jianfabai/medgemma-finetune/predict_result/somework/divide_covid-non-covid_folder.py得到各个模型最佳阈值和0.5阈值时预测为covid的样本(trans_flatten没有这一步，这个为直接生成了)
+再/remote-home/share/25-jianfabai/medgemma-finetune/predict_result/somework/analysis_diff_com.py得到哪些共有，哪些只有的csv
+最后/remote-home/share/25-jianfabai/medgemma-finetune/predict_result/somework/vote.py投票
