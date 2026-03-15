@@ -1,2 +1,5 @@
-stage 1 and 3 is available in resnet3d.
-stage 2a and 2b is available in medgemma-fintune.
+The implementation of the paper "Vision-Language Model Based Multi-Expert Fusion for CT Image Classification".
+
+This repository contains our solution for the Multi-Source Covid-19 Detection Challenge.
+
+The implementations of Stage 1 and Stage 3 are provided in resnet3d, while the implementations of Stage 2a and Stage 2b are provided in medgemma-finetune.
